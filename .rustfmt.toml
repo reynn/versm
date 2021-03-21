@@ -1,0 +1,11 @@
+edition                  = "2018"
+error_on_line_overflow   = true
+error_on_unformatted     = true
+indent_style             = "Block"
+max_width                = 120
+merge_imports            = true
+reorder_imports          = false
+use_field_init_shorthand = true
+use_try_shorthand        = true
+version                  = "Two"
+wrap_comments            = true
