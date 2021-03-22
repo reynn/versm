@@ -5,6 +5,7 @@
 //! for specifying it.
 
 mod managers;
+pub mod paths;
 mod versions;
 
 use self::{managers::ManagersSection, versions::VersionsSection};

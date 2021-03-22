@@ -31,26 +31,21 @@ pub const CONFIG_FILE: &str = "versm.toml";
 /// Versm Subcommands
 #[derive(Command, Debug, Options, Runnable)]
 pub enum VersmCmd {
+    /// The `config` subcommand
+    #[options(help = "Manage the app config")]
+    Config(ConfigCmd),
+    /// The `install` subcommand
+    #[options(help = "Install a managed version")]
+    Install(InstallCmd),
+    /// The `list` subcommand
+    #[options(help = "List versions and managers")]
+    List(ListCmd),
+    /// The `remove` subcommand
+    #[options(help = "Remove a managed version")]
+    Remove(RemoveCmd),
     /// The `help` subcommand
     #[options(help = "get usage information")]
     Help(Help<Self>),
-
-    /// The `start` subcommand
-    #[options(help = "Install a managed version")]
-    Install(InstallCmd),
-
-    /// The `start` subcommand
-    #[options(help = "List versions and managers")]
-    List(ListCmd),
-
-    /// The `start` subcommand
-    #[options(help = "Remove a managed version")]
-    Remove(RemoveCmd),
-
-    /// The `start` subcommand
-    #[options(help = "Manage the app config")]
-    Config(ConfigCmd),
-
     /// The `version` subcommand
     #[options(help = "display version information")]
     Version(VersionCmd),

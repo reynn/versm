@@ -1,10 +1,10 @@
 //! Versm Abscissa Application
 
-use crate::{commands::VersmCmd, config::VersmConfig};
+use crate::{commands::VersmCmd, config::paths::VersmPaths, config::VersmConfig};
 use abscissa_core::{
     application::{self, AppCell},
     config::{self, CfgCell},
-    trace, Application, EntryPoint, FrameworkError, StandardPaths,
+    trace, Application, EntryPoint, FrameworkError,
 };
 
 /// Application state
@@ -41,7 +41,7 @@ impl Application for VersmApp {
     type Cfg = VersmConfig;
 
     /// Paths to resources within the application.
-    type Paths = StandardPaths;
+    type Paths = VersmPaths;
 
     /// Accessor for application configuration.
     fn config(&self) -> config::Reader<VersmConfig> {
