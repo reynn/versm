@@ -12,10 +12,6 @@ pub struct VersionCmd {}
 impl Runnable for VersionCmd {
     /// Print version message
     fn run(&self) {
-        println!(
-            "{} {}",
-            VersmCmd::name(),
-            VersmCmd::version()
-        );
+        println!("{} {}", VersmCmd::name(), VersmCmd::version());
     }
 }

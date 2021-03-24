@@ -3,7 +3,7 @@ name: base
 on:
   pull_request: {}
   push:
-    branches: "*"
+    branches: ["*"]
 
 env:
   CARGO_INCREMENTAL: 0
@@ -18,7 +18,6 @@ jobs:
           - macos-latest
           - windows-latest
         rust:
-          - 1.47.0 # MSRV
           - stable
           - beta
           - nightly
@@ -28,7 +27,7 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: ${{ matrix.rust }}
-          components: clippy,rustfmt # used by Abscissa CLI tests
+          components: clippy,rustfmt
           override: true
           profile: minimal
       - run: cargo test --release

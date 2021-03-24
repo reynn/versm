@@ -1,29 +1,26 @@
 //! Versm Subcommands
-//!
-//! This is where you specify the subcommands of your application.
-//!
-//! The default application comes with two subcommands:
-//!
-//! - `start`: launches the application
-//! - `version`: print application version
-//!
-//! See the `impl Configurable` below for how to specify the path to the
-//! application's configuration file.
 
+// region: Modules
 pub mod config;
 pub mod install;
 pub mod list;
 pub mod remove;
 pub mod version;
-
-use self::{
-    config::ConfigCmd, install::InstallCmd, list::ListCmd, remove::RemoveCmd, version::VersionCmd,
+// endregion
+// region: Imports
+use crate::{
+    commands::{
+        config::ConfigCmd, install::InstallCmd, list::ListCmd, remove::RemoveCmd,
+        version::VersionCmd,
+    },
+    config::VersmConfig,
 };
-use crate::config::VersmConfig;
 use abscissa_core::{
     config::Override, Command, Configurable, FrameworkError, Help, Options, Runnable,
 };
+use directories_next::{BaseDirs, ProjectDirs};
 use std::path::PathBuf;
+// endregion
 
 /// Versm Configuration Filename
 pub const CONFIG_FILE: &str = "versm.toml";
@@ -43,6 +40,7 @@ pub enum VersmCmd {
     /// The `remove` subcommand
     #[options(help = "Remove a managed version")]
     Remove(RemoveCmd),
+
     /// The `help` subcommand
     #[options(help = "get usage information")]
     Help(Help<Self>),
@@ -55,10 +53,16 @@ pub enum VersmCmd {
 impl Configurable<VersmConfig> for VersmCmd {
     /// Location of the configuration file
     fn config_path(&self) -> Option<PathBuf> {
+        let project_dirs = ProjectDirs::from("dev", "reynn", "versm");
         // Check if the config file exists, and if it does not, ignore it.
         // If you'd like for a missing configuration file to be a hard error
         // instead, always return `Some(CONFIG_FILE)` here.
-        let filename = PathBuf::from(CONFIG_FILE);
+        let filename = if let Some(proj_dirs) = project_dirs {
+            proj_dirs.config_dir().join(CONFIG_FILE)
+        } else {
+            let base_dirs = BaseDirs::new()?;
+            base_dirs.config_dir().join(CONFIG_FILE)
+        };
 
         if filename.exists() {
             Some(filename)
@@ -74,10 +78,10 @@ impl Configurable<VersmConfig> for VersmCmd {
     /// settings from command-line options.
     fn process_config(&self, config: VersmConfig) -> Result<VersmConfig, FrameworkError> {
         match self {
-            VersmCmd::Install(cmd) => cmd.override_config(config),
             VersmCmd::Config(cmd) => cmd.override_config(config),
-            VersmCmd::Remove(cmd) => cmd.override_config(config),
+            VersmCmd::Install(cmd) => cmd.override_config(config),
             VersmCmd::List(cmd) => cmd.override_config(config),
+            VersmCmd::Remove(cmd) => cmd.override_config(config),
             _ => Ok(config),
         }
     }
